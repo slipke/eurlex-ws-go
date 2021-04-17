@@ -1,4 +1,4 @@
-package soap
+package request
 
 import (
 	"encoding/xml"
@@ -8,13 +8,13 @@ type Envelope struct {
 	XMLName          xml.Name `xml:"soap:Envelope"`
 	XMLNamespaceSear string   `xml:"xmlns:sear,attr"`
 	XMLNAmespaceSoap string   `xml:"xmlns:soap,attr"`
-	Header           *Header
-	Body             *Body
+	Header           *Header  `xml:"soap:Header"`
+	Body             *Body    `xml:"soap:Body"`
 }
 
 type Header struct {
-	XMLName  xml.Name `xml:"soap:Header"`
-	Security *Security
+	XMLName  xml.Name  `xml:"soap:Header"`
+	Security *Security `xml:"wsse:Security"`
 }
 
 func NewHeader() *Header {
@@ -24,10 +24,10 @@ func NewHeader() *Header {
 }
 
 type Security struct {
-	XMLName          xml.Name `xml:"wsse:Security"`
-	XMLNamespaceWSSE string   `xml:"xmlns:wsse,attr"`
-	MustUnderstand   bool     `xml:"soap:mustUnderstand,attr"`
-	UsernameToken    *UsernameToken
+	XMLName          xml.Name       `xml:"wsse:Security"`
+	XMLNamespaceWSSE string         `xml:"xmlns:wsse,attr"`
+	MustUnderstand   bool           `xml:"soap:mustUnderstand,attr"`
+	UsernameToken    *UsernameToken `xml:"wsse:UsernameToken"`
 }
 
 func NewSecurity() *Security {
@@ -48,11 +48,11 @@ func NewEnvelope() *Envelope {
 }
 
 type UsernameToken struct {
-	XMLName         xml.Name `xml:"wsse:UsernameToken"`
-	WSUID           string   `xml:"wsu:Id,attr"`
-	XMLNamespaceWSU string   `xml:"xmlns:wsu,attr"`
-	Username        string   `xml:"wsse:Username"`
-	Password        *Password
+	XMLName         xml.Name  `xml:"wsse:UsernameToken"`
+	WSUID           string    `xml:"wsu:Id,attr"`
+	XMLNamespaceWSU string    `xml:"xmlns:wsu,attr"`
+	Username        string    `xml:"wsse:Username"`
+	Password        *Password `xml:"wsse:Password"`
 }
 
 func NewUsernameToken() *UsernameToken {
@@ -101,10 +101,10 @@ func NewSearchRequest(q string, p, ps int64, lan string) *SearchRequest {
 	}
 }
 
-func (e *Envelope) ToXML() (string, error) {
-	xmlStr, err := xml.Marshal(e)
+func (e *Envelope) ToXML() ([]byte, error) {
+	xmlBytes, err := xml.Marshal(e)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(xmlStr), nil
+	return xmlBytes, nil
 }

@@ -3,7 +3,7 @@ package webservice
 import (
 	"encoding/xml"
 
-	"github.com/slipke/eurlex-ws-go/pkg/soap"
+	"github.com/slipke/eurlex-ws-go/pkg/request"
 )
 
 type SearchRequest struct {
@@ -31,18 +31,18 @@ func NewSearchRequestWithConfig(cfg *Config, query string) *SearchRequest {
 	return r
 }
 
-func (s *SearchRequest) ToXML() (string, error) {
-	e := soap.NewEnvelope()
+func (s *SearchRequest) ToXML() ([]byte, error) {
+	e := request.NewEnvelope()
 
 	e.Header.Security.UsernameToken.Username = s.Username
 	e.Header.Security.UsernameToken.Password.Password = s.Password
 
-	sr := soap.NewSearchRequest(s.Query.String(), s.Page, s.PageSize, s.SearchLanguage)
+	sr := request.NewSearchRequest(s.Query.String(), s.Page, s.PageSize, s.SearchLanguage)
 	e.Body.RootElement = sr
 
-	xmlStr, err := xml.Marshal(e)
+	xmlBytes, err := xml.Marshal(e)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(xmlStr), nil
+	return xmlBytes, nil
 }

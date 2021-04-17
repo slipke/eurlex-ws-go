@@ -1,4 +1,4 @@
-package soap
+package request
 
 import (
 	"testing"
@@ -15,7 +15,7 @@ func TestCreateEnvelope(t *testing.T) {
 		t.Errorf("ToXML failed: %s", err)
 	}
 
-	if isXML != shouldXML {
+	if string(isXML) != shouldXML {
 		t.Errorf("XML output wrong, got: %s, want: %s", isXML, shouldXML)
 	}
 }
@@ -33,7 +33,7 @@ func TestHeader(t *testing.T) {
 		t.Errorf("ToXML failed: %s", err)
 	}
 
-	if isXML != shouldXML {
+	if string(isXML) != shouldXML {
 		t.Errorf("XML output wrong, got: %s, want: %s", isXML, shouldXML)
 	}
 }
@@ -53,7 +53,7 @@ func TestBody(t *testing.T) {
 		t.Errorf("ToXML failed: %s", err)
 	}
 
-	if isXML != shouldXML {
+	if string(isXML) != shouldXML {
 		t.Errorf("XML output wrong, got: %s, want: %s", isXML, shouldXML)
 	}
 }

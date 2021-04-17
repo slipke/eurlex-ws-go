@@ -48,7 +48,7 @@ func TestToXML(t *testing.T) {
 		t.Errorf("ToXML failed: %s", err)
 	}
 
-	if isXML != shouldXML {
+	if string(isXML) != shouldXML {
 		t.Errorf("XML output wrong, got: %s, want: %s", isXML, shouldXML)
 	}
 
