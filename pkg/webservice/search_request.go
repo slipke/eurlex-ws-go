@@ -18,7 +18,10 @@ type SearchRequest struct {
 func NewSearchRequest(query string) *SearchRequest {
 	q := NewExpertQuery(query)
 	return &SearchRequest{
-		Query: q,
+		Query:          q,
+		Page:           1,
+		PageSize:       10,
+		SearchLanguage: "en",
 	}
 }
 
@@ -27,6 +30,8 @@ func NewSearchRequestWithConfig(cfg *Config, query string) *SearchRequest {
 
 	r.Username = cfg.Username
 	r.Password = cfg.Password
+	r.PageSize = cfg.PageSize
+	r.SearchLanguage = cfg.SearchLanguage
 
 	return r
 }

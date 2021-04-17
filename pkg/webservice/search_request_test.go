@@ -28,6 +28,8 @@ func TestCreateSearchRequest(t *testing.T) {
 	if sr.Query.String() != search {
 		t.Errorf("Query was not set properly, got: %s, want: %s", sr.Query.String(), search)
 	}
+
+	// @TODO Add more fields when decided
 }
 
 func TestToXML(t *testing.T) {

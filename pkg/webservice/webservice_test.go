@@ -57,6 +57,8 @@ func TestCreateWebservice(t *testing.T) {
 func TestSearch(t *testing.T) {
 	cfg := NewConfig("testuser", "testpass")
 	// @TODO mock GET
+	// - https://github.com/golang/mock
+	// - http://hassansin.github.io/Unit-Testing-http-client-in-Go
 	cfg.Client = &http.Client{}
 
 	ws := NewWebservice(cfg)
@@ -64,6 +66,7 @@ func TestSearch(t *testing.T) {
 	sr, err := ws.Search(NewSearchRequest("testsearch"))
 	if err != nil {
 		t.Errorf("Failed to search: %s", err)
+		t.FailNow()
 	}
 
 	if sr.NumHits != 10 {

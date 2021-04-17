@@ -15,4 +15,6 @@ func TestCreateConfig(t *testing.T) {
 	if c.Password != p {
 		t.Errorf("Password was not set properly, got %s, want: %s", c.Password, p)
 	}
+
+	// @TODO Add more fields + default values when decided
 }

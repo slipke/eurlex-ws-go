@@ -19,7 +19,6 @@ func NewSearchResult() *SearchResult {
 }
 
 func NewSearchResultFromXML(xml string) (*SearchResult, error) {
-	// log.Print("haz xml", xml)
 	sr := NewSearchResult()
 	e, err := response.NewEnvelopeFromXML(xml)
 	if err != nil {

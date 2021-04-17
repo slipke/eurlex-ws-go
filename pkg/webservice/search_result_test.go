@@ -64,4 +64,6 @@ func TestCreateSearchResult(t *testing.T) {
 	if sr.Result == nil {
 		t.Errorf("Failed to assign Result, got: %+v, want: %+v", sr.Result, "not nil")
 	}
+
+	// @TODO Add more tests on result
 }

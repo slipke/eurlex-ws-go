@@ -27,6 +27,8 @@ func (ws *Webservice) Search(sr *SearchRequest) (*SearchResult, error) {
 		return nil, fmt.Errorf("failed to marshal SearchRequest: %s", err)
 	}
 
+	// log.Debugf("Calling %s %s with body %s", http.MethodPost, wsURL, xml)
+
 	body := bytes.NewReader(xml)
 	r, err := http.NewRequest(http.MethodPost, wsURL, body)
 	if err != nil {
@@ -43,14 +45,31 @@ func (ws *Webservice) Search(sr *SearchRequest) (*SearchResult, error) {
 		return nil, fmt.Errorf("failed to read response body: %s", err)
 	}
 
-	// @TODO how to differentiate error responses from valid ones? (HTTP header?)
-	// => New different parser / object?
-	sRes, err := NewSearchResultFromXML(string(resBody))
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse response body: %s", err)
+	if len(resBody) <= 0 {
+		return nil, fmt.Errorf("failed to unmarshal response body, empty response")
 	}
 
-	return sRes, nil
+	// log.Debugf(
+	// 	"ResponseCode: %d, ResponseBody: %s",
+	// 	res.StatusCode,
+	// 	string(resBody),
+	// )
+
+	if res.StatusCode == http.StatusOK {
+		// We expect a valid XML response
+		sRes, err := NewSearchResultFromXML(string(resBody))
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse response body: %s", err)
+		}
+		return sRes, nil
+	} else {
+		// We expect an error message
+		er, err := NewErrorResponseFromXML(string(resBody))
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse response body: %s", err)
+		}
+		return nil, fmt.Errorf("server returned statusCode %d with fault code '%s' and reason '%s'", res.StatusCode, er.Code, er.Reason)
+	}
 }
 
 func NewWebservice(cfg *Config) *Webservice {
