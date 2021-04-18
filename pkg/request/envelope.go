@@ -12,15 +12,22 @@ type Envelope struct {
 	Body             *Body    `xml:"soap:Body"`
 }
 
+func NewEnvelope() *Envelope {
+	return &Envelope{
+		XMLNamespaceSear: "http://eur-lex.europa.eu/search",
+		XMLNAmespaceSoap: "http://www.w3.org/2003/05/soap-envelope",
+		Header:           NewHeader(),
+		Body:             NewBody(),
+	}
+}
+
 type Header struct {
-	XMLName  xml.Name  `xml:"soap:Header"`
-	Security *Security `xml:"wsse:Security"`
+	XMLName     xml.Name `xml:"soap:Header"`
+	RootElement interface{}
 }
 
 func NewHeader() *Header {
-	return &Header{
-		Security: NewSecurity(),
-	}
+	return &Header{}
 }
 
 type Security struct {
@@ -30,20 +37,11 @@ type Security struct {
 	UsernameToken    *UsernameToken `xml:"wsse:UsernameToken"`
 }
 
-func NewSecurity() *Security {
+func NewSecurity(u, p string) *Security {
 	return &Security{
 		XMLNamespaceWSSE: "http://docs.oasisopen.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
 		MustUnderstand:   true,
-		UsernameToken:    NewUsernameToken(),
-	}
-}
-
-func NewEnvelope() *Envelope {
-	return &Envelope{
-		XMLNamespaceSear: "http://eur-lex.europa.eu/search",
-		XMLNAmespaceSoap: "http://www.w3.org/2003/05/soap-envelope",
-		Header:           NewHeader(),
-		Body:             NewBody(),
+		UsernameToken:    NewUsernameToken(u, p),
 	}
 }
 
@@ -55,11 +53,12 @@ type UsernameToken struct {
 	Password        *Password `xml:"wsse:Password"`
 }
 
-func NewUsernameToken() *UsernameToken {
+func NewUsernameToken(u, p string) *UsernameToken {
 	return &UsernameToken{
 		WSUID:           "UsernameToken-3",
 		XMLNamespaceWSU: "http://docs.oasisopen.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
-		Password:        NewPassword(),
+		Username:        u,
+		Password:        NewPassword(p),
 	}
 }
 
@@ -69,9 +68,10 @@ type Password struct {
 	Password string   `xml:",chardata"`
 }
 
-func NewPassword() *Password {
+func NewPassword(p string) *Password {
 	return &Password{
-		Type: "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText",
+		Password: p,
+		Type:     "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText",
 	}
 }
 
@@ -92,12 +92,12 @@ type SearchRequest struct {
 	SearchLanguage string   `xml:"sear:searchLanguage"`
 }
 
-func NewSearchRequest(q string, p, ps int64, lan string) *SearchRequest {
+func NewSearchRequest(q string, p, ps int64, lang string) *SearchRequest {
 	return &SearchRequest{
 		ExpertQuery:    q,
 		Page:           p,
 		PageSize:       ps,
-		SearchLanguage: lan,
+		SearchLanguage: lang,
 	}
 }
 

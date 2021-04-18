@@ -1,7 +1,9 @@
 package webservice
 
 import (
+	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 )
 
@@ -37,8 +39,6 @@ const (
         </searchResults>
     </S:Body>
 </S:Envelope>`
-
-	xmlErr = `<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope"><S:Header><NotUnderstood xmlns:abc="http://docs.oasisopen.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope" qname="abc:Security"/></S:Header><S:Body><ns1:Fault xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.w3.org/2003/05/soap-envelope"><ns1:Code><ns1:Value>ns1:MustUnderstand</ns1:Value></ns1:Code><ns1:Reason><ns1:Text xml:lang="en">One or more mandatory SOAP header blocks not understood</ns1:Text></ns1:Reason></ns1:Fault></S:Body></S:Envelope>`
 )
 
 func TestCreateWebservice(t *testing.T) {
@@ -54,16 +54,38 @@ func TestCreateWebservice(t *testing.T) {
 	}
 }
 
+// RoundTripFunc .
+type RoundTripFunc func(req *http.Request) *http.Response
+
+// RoundTrip .
+func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+	return f(req), nil
+}
+
+func NewMockClient(fn RoundTripFunc) *http.Client {
+	return &http.Client{
+		Transport: RoundTripFunc(fn),
+	}
+}
+
 func TestSearch(t *testing.T) {
 	cfg := NewConfig("testuser", "testpass")
-	// @TODO mock GET
-	// - https://github.com/golang/mock
-	// - http://hassansin.github.io/Unit-Testing-http-client-in-Go
-	cfg.Client = &http.Client{}
+
+	// Mock our HTTP Request
+	cfg.Client = NewMockClient(func(req *http.Request) *http.Response {
+		if req.URL.String() != wsURL {
+			t.Errorf("Called wrong URL, got %s, want: %s", req.URL.String(), wsURL)
+			t.FailNow()
+		}
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Body:       ioutil.NopCloser(strings.NewReader(xmlWebservice)),
+		}
+	})
 
 	ws := NewWebservice(cfg)
 
-	sr, err := ws.Search(NewSearchRequest("testsearch"))
+	sr, err := ws.Search(NewSearchRequestWithConfig(cfg, "testsearch"))
 	if err != nil {
 		t.Errorf("Failed to search: %s", err)
 		t.FailNow()

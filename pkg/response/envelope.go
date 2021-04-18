@@ -21,6 +21,7 @@ func NewEnvelopeFromXML(xmlStr string) (*Envelope, error) {
 type Header struct {
 	XMLName       xml.Name       `xml:"Header"`
 	NotUnderstood *NotUnderstood `xml:"NotUnderstood"`
+	// @TODO Add more fields for correct response
 }
 
 type NotUnderstood struct {
@@ -32,10 +33,6 @@ type Body struct {
 	XMLName       xml.Name       `xml:"Body"`
 	Fault         *Fault         `xml:"Fault"`
 	SearchResults *SearchResults `xml:"searchResults"`
-}
-
-func NewBody() *Body {
-	return &Body{}
 }
 
 type Fault struct {
@@ -51,10 +48,6 @@ type SearchResults struct {
 	Page      int64    `xml:"page"`
 	Language  string   `xml:"language"`
 	Result    *Result  `xml:"result"`
-}
-
-func NewSearchResults() *SearchResults {
-	return &SearchResults{}
 }
 
 type Result struct {

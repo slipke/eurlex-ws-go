@@ -38,12 +38,8 @@ func NewSearchRequestWithConfig(cfg *Config, query string) *SearchRequest {
 
 func (s *SearchRequest) ToXML() ([]byte, error) {
 	e := request.NewEnvelope()
-
-	e.Header.Security.UsernameToken.Username = s.Username
-	e.Header.Security.UsernameToken.Password.Password = s.Password
-
-	sr := request.NewSearchRequest(s.Query.String(), s.Page, s.PageSize, s.SearchLanguage)
-	e.Body.RootElement = sr
+	e.Header.RootElement = request.NewSecurity(s.Username, s.Password)
+	e.Body.RootElement = request.NewSearchRequest(s.Query.String(), s.Page, s.PageSize, s.SearchLanguage)
 
 	xmlBytes, err := xml.Marshal(e)
 	if err != nil {
