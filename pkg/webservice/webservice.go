@@ -55,6 +55,11 @@ func (ws *Webservice) Search(sr *SearchRequest) (*SearchResult, error) {
 	// 	string(resBody),
 	// )
 
+	// err = ioutil.WriteFile("/tmp/eurlex.out", resBody, 0644)
+	// if err != nil {
+	// 	log.Errorf("Failed to write to file: %s", err)
+	// }
+
 	if res.StatusCode == http.StatusOK {
 		// We expect a valid XML response
 		sRes, err := NewSearchResultFromXML(string(resBody))

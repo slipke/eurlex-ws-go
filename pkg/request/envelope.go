@@ -39,7 +39,7 @@ type Security struct {
 
 func NewSecurity(u, p string) *Security {
 	return &Security{
-		XMLNamespaceWSSE: "http://docs.oasisopen.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
+		XMLNamespaceWSSE: "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
 		MustUnderstand:   true,
 		UsernameToken:    NewUsernameToken(u, p),
 	}
@@ -55,8 +55,8 @@ type UsernameToken struct {
 
 func NewUsernameToken(u, p string) *UsernameToken {
 	return &UsernameToken{
-		WSUID:           "UsernameToken-3",
-		XMLNamespaceWSU: "http://docs.oasisopen.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
+		WSUID:           "UsernameToken-1",
+		XMLNamespaceWSU: "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
 		Username:        u,
 		Password:        NewPassword(p),
 	}
@@ -84,17 +84,23 @@ func NewBody() *Body {
 	return &Body{}
 }
 
+// CDATAString is a workaround for golang's XML implementation,
+// since it does not support name and ,cdata in one tag
+type CDATAString struct {
+	Value string `xml:",cdata"`
+}
+
 type SearchRequest struct {
-	XMLName        xml.Name `xml:"sear:searchRequest"`
-	ExpertQuery    string   `xml:"sear:expertQuery"`
-	Page           int64    `xml:"sear:page"`
-	PageSize       int64    `xml:"sear:pageSize"`
-	SearchLanguage string   `xml:"sear:searchLanguage"`
+	XMLName        xml.Name    `xml:"sear:searchRequest"`
+	ExpertQuery    CDATAString `xml:"sear:expertQuery"`
+	Page           int64       `xml:"sear:page"`
+	PageSize       int64       `xml:"sear:pageSize"`
+	SearchLanguage string      `xml:"sear:searchLanguage"`
 }
 
 func NewSearchRequest(q string, p, ps int64, lang string) *SearchRequest {
 	return &SearchRequest{
-		ExpertQuery:    q,
+		ExpertQuery:    CDATAString{Value: q},
 		Page:           p,
 		PageSize:       ps,
 		SearchLanguage: lang,

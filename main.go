@@ -6,20 +6,21 @@ import (
 )
 
 func main() {
-	cfg := webservice.NewConfig("testuser", "testpass")
+	cfg := webservice.NewConfig("", "")
 	ws := webservice.NewWebservice(cfg)
 
 	sr, err := ws.Search(
 		webservice.NewSearchRequestWithConfig(
 			cfg,
-			"DN=3*",
+			"DN~32014R1338  OR  DN~32014R1337",
 		),
 	)
 	if err != nil {
 		log.Errorf("Failed to issue request: %s", err)
+		return
 	}
 
-	log.Info(sr)
+	log.Infof("%+v", sr)
 }
 
 func init() {

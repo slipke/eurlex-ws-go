@@ -11,7 +11,7 @@ type SearchResult struct {
 	TotalHits int64
 	Page      int64
 	Language  string
-	Result    interface{}
+	Result    []*response.Result
 }
 
 func NewSearchResult() *SearchResult {

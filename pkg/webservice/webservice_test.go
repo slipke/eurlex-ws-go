@@ -7,40 +7,6 @@ import (
 	"testing"
 )
 
-const (
-	// @TODO Replace and adjust tests
-	xmlWebservice = `<S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope">
-    <S:Body>
-        <searchResults xsi:schemaLocation="http://eur-lex.europa.eu/search http://localhost:7001/eurlex-frontoffice/eurlex-ws?xsd=3"
-            xmlns="http://eurlex.europa.eu/search"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <numhits>10</numhits>
-            <totalhits>1946</totalhits>
-            <page>1</page>
-            <language>en</language>
-            <result>
-                <reference>eng_cellar:93836665-712f-4444-a1e6-dadad5607e80_en</reference>
-                <rank>1</rank>
-                <content>
-                    <NOTICE>
-                        <EXPRESSION>
-                            <EXPRESSION_TITLE>
-                                <VALUE>Decision on the …</VALUE>
-                            </EXPRESSION_TITLE>
-                            <EXPRESSION_USES_LANGUAGE>
-                                <URI>
-                                    <IDENTIFIER>ENG</IDENTIFIER>
-                                </URI>
-                            </EXPRESSION_USES_LANGUAGE>
-                        </EXPRESSION>
-                    </NOTICE>
-                </content>
-            </result>
-        </searchResults>
-    </S:Body>
-</S:Envelope>`
-)
-
 func TestCreateWebservice(t *testing.T) {
 	u := "testuser"
 	p := "testpass"
@@ -69,6 +35,12 @@ func NewMockClient(fn RoundTripFunc) *http.Client {
 }
 
 func TestSearch(t *testing.T) {
+	inputFile := "../../fixtures/result.xml"
+	xmlBytes, err := ioutil.ReadFile(inputFile)
+	if err != nil {
+		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)
+	}
+
 	cfg := NewConfig("testuser", "testpass")
 
 	// Mock our HTTP Request
@@ -79,7 +51,7 @@ func TestSearch(t *testing.T) {
 		}
 		return &http.Response{
 			StatusCode: http.StatusOK,
-			Body:       ioutil.NopCloser(strings.NewReader(xmlWebservice)),
+			Body:       ioutil.NopCloser(strings.NewReader(string(xmlBytes))),
 		}
 	})
 
@@ -91,24 +63,7 @@ func TestSearch(t *testing.T) {
 		t.FailNow()
 	}
 
-	if sr.NumHits != 10 {
-		t.Errorf("Failed to assign NumHits, got: %d, want: %d", sr.NumHits, 10)
-	}
-
-	if sr.TotalHits != 1946 {
-		t.Errorf("Failed to assign TotalHits, got: %d, want: %d", sr.TotalHits, 1946)
-	}
-
-	if sr.Page != 1 {
-		t.Errorf("Failed to assign Page, got: %d, want: %d", sr.Page, 1)
-	}
-
-	if sr.Language != "en" {
-		t.Errorf("Failed to assign Language, got: %s, want: %s", sr.Language, "en")
-	}
-
-	// @TODO More tests for result
-	if sr.Result == nil {
-		t.Errorf("Failed to assign Result, got: %+v, want: %+v", sr.Result, "not nil")
+	if len(sr.Result) <= 0 {
+		t.Errorf("Missing Results, got: %d, want: %s", len(sr.Result), "> 0")
 	}
 }

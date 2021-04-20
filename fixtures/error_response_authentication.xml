@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+    <env:Header/>
+    <env:Body>
+        <env:Fault xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <Code xmlns="http://www.w3.org/2003/05/soap-envelope">
+                <Value>env:Sender</Value>
+                <Subcode>
+                    <Value>wsse:FailedAuthentication</Value>
+                </Subcode>
+            </Code>
+            <Reason xmlns="http://www.w3.org/2003/05/soap-envelope">
+                <Text xml:lang="en-US">Failed to assert identity with UsernameToken.</Text>
+            </Reason>
+        </env:Fault>
+    </env:Body>
+</env:Envelope>

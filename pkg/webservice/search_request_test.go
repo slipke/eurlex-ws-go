@@ -1,6 +1,9 @@
 package webservice
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestCreateSearchRequest(t *testing.T) {
 	search := "testsearch"
@@ -39,19 +42,49 @@ func TestToXML(t *testing.T) {
 
 	sr := NewSearchRequestWithConfig(NewConfig(u, p), search)
 	sr.Page = 1
-	sr.PageSize = 10
+	sr.PageSize = 20
 	sr.SearchLanguage = "de"
 
-	// This is how our xml should look like
-	shouldXML := `<soap:Envelope xmlns:sear="http://eur-lex.europa.eu/search" xmlns:soap="http://www.w3.org/2003/05/soap-envelope"><soap:Header><wsse:Security xmlns:wsse="http://docs.oasisopen.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" soap:mustUnderstand="true"><wsse:UsernameToken wsu:Id="UsernameToken-3" xmlns:wsu="http://docs.oasisopen.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"><wsse:Username>testuser</wsse:Username><wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">testpass</wsse:Password></wsse:UsernameToken></wsse:Security></soap:Header><soap:Body><sear:searchRequest><sear:expertQuery>testsearch</sear:expertQuery><sear:page>1</sear:page><sear:pageSize>10</sear:pageSize><sear:searchLanguage>de</sear:searchLanguage></sear:searchRequest></soap:Body></soap:Envelope>`
+	requiredElements := []string{
+		// Header
+		"wsse:Security",
+		"xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\"",
+		"soap:mustUnderstand=\"true\"",
+		"wsse:UsernameToken",
+		"xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"",
+		"wsu:Id=\"UsernameToken-1\"",
+		"wsse:Username",
+		"wsse:Password",
+		"Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\"",
+		"/wsse:Username",
+		"/wsse:Password",
+		"testuser",
+		"testpass",
+		"/wsse:UsernameToken",
+		"/wsse:Security",
+		// Body
+		"sear:searchRequest",
+		"sear:expertQuery",
+		"<sear:expertQuery><![CDATA[testsearch]]></sear:expertQuery>",
+		"sear:page",
+		"/sear:page",
+		"sear:pageSize",
+		"/sear:pageSize",
+		"sear:searchLanguage",
+		"/sear:searchLanguage",
+		"<sear:page>1</sear:page>",
+		"<sear:pageSize>20</sear:pageSize>",
+		"<sear:searchLanguage>de</sear:searchLanguage>",
+	}
 
 	isXML, err := sr.ToXML()
 	if err != nil {
 		t.Errorf("ToXML failed: %s", err)
 	}
 
-	if string(isXML) != shouldXML {
-		t.Errorf("XML output wrong, got: %s, want: %s", isXML, shouldXML)
+	for _, e := range requiredElements {
+		if !strings.Contains(string(isXML), e) {
+			t.Errorf("Element %s was not found in resulting XML", e)
+		}
 	}
-
 }
