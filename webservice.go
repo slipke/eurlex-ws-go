@@ -18,6 +18,10 @@ type Webservice struct {
 }
 
 func (ws *Webservice) Search(sr *SearchRequest) (*SearchResult, error) {
+	if sr == nil {
+		return nil, fmt.Errorf("SearchRequest must not be nil")
+	}
+
 	if ws.cfg.Username == "" || ws.cfg.Password == "" {
 		return nil, fmt.Errorf("username and password must be set in config")
 	}

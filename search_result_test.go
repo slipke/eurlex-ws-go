@@ -106,3 +106,37 @@ func TestCreateSearchResult(t *testing.T) {
 		}
 	}
 }
+
+func TestMissingBody(t *testing.T) {
+	inputFile := "./fixtures/result_empty_body.xml"
+	xmlBytes, err := ioutil.ReadFile(inputFile)
+	if err != nil {
+		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)
+	}
+
+	sr, err := NewSearchResultFromXML(string(xmlBytes))
+	if err == nil {
+		t.Errorf("Expected error message due to missing body")
+	}
+
+	if sr != nil {
+		t.Errorf("Expected ErrorResponse to be nil, due to missing body element")
+	}
+}
+
+func TestMissingSearchResults(t *testing.T) {
+	inputFile := "./fixtures/result_empty_searchresult.xml"
+	xmlBytes, err := ioutil.ReadFile(inputFile)
+	if err != nil {
+		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)
+	}
+
+	sr, err := NewSearchResultFromXML(string(xmlBytes))
+	if err == nil {
+		t.Errorf("Expected error message due to missing SearchResult")
+	}
+
+	if sr != nil {
+		t.Errorf("Expected ErrorResponse to be nil, due to missing SearchResult element")
+	}
+}

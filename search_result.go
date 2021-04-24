@@ -29,6 +29,14 @@ func NewSearchResultFromXML(xml string) (*SearchResult, error) {
 		return nil, fmt.Errorf("%s: %s", errorFailedToCreateResult, err)
 	}
 
+	if e.Body == nil {
+		return nil, fmt.Errorf("failed to parse search result, missing body")
+	}
+
+	if e.Body.SearchResults == nil {
+		return nil, fmt.Errorf("failed to parse search result, missing SearchResults element")
+	}
+
 	sr.NumHits = e.Body.SearchResults.NumHits
 	sr.TotalHits = e.Body.SearchResults.TotalHits
 	sr.Page = e.Body.SearchResults.Page

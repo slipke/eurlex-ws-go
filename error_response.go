@@ -26,6 +26,14 @@ func NewErrorResponseFromXML(xml string) (*ErrorResponse, error) {
 		return nil, fmt.Errorf("%s: %s", errorFailedToCreateResponse, err)
 	}
 
+	if e.Body == nil {
+		return nil, fmt.Errorf("failed to parse error response, missing body")
+	}
+
+	if e.Body.Fault == nil {
+		return nil, fmt.Errorf("failed to parse error response, missing Fault element")
+	}
+
 	er.Code = e.Body.Fault.Code
 	er.Reason = e.Body.Fault.Reason
 

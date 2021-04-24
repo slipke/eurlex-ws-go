@@ -44,3 +44,37 @@ func TestAuthenticationErrorResponseFromXML(t *testing.T) {
 
 	// @TODO Add more tests for different error responses (i.e. wrong query)
 }
+
+func TestErrorResponseEmptyBody(t *testing.T) {
+	inputFile := "./fixtures/error_response_empty_body.xml"
+	xmlBytes, err := ioutil.ReadFile(inputFile)
+	if err != nil {
+		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)
+	}
+
+	er, err := NewErrorResponseFromXML(string(xmlBytes))
+	if err == nil {
+		t.Errorf("Expected error message due to missing body")
+	}
+
+	if er != nil {
+		t.Errorf("Expected ErrorResponse to be nil, due to missing body element")
+	}
+}
+
+func TestErrorResponseEmptyFault(t *testing.T) {
+	inputFile := "./fixtures/error_response_empty_fault.xml"
+	xmlBytes, err := ioutil.ReadFile(inputFile)
+	if err != nil {
+		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)
+	}
+
+	er, err := NewErrorResponseFromXML(string(xmlBytes))
+	if err == nil {
+		t.Errorf("Expected error message due to missing body")
+	}
+
+	if er != nil {
+		t.Errorf("Expected ErrorResponse to be nil, due to missing fault element")
+	}
+}
