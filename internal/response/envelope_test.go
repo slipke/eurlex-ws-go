@@ -5,6 +5,17 @@ import (
 	"testing"
 )
 
+func TestInvalidErrorResponse(t *testing.T) {
+	er, err := NewEnvelopeFromXML("")
+	if er != nil {
+		t.Errorf("Returned envelope where it should be nil")
+	}
+
+	if err == nil {
+		t.Errorf("Should have returned an error message")
+	}
+}
+
 func TestSuccessResponse(t *testing.T) {
 	inputFile := "../../fixtures/result.xml"
 	xmlBytes, err := ioutil.ReadFile(inputFile)

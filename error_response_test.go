@@ -2,8 +2,24 @@ package eurlex
 
 import (
 	"io/ioutil"
+	"strings"
 	"testing"
 )
+
+func TestInvalidErrorResponse(t *testing.T) {
+	er, err := NewErrorResponseFromXML("")
+	if er != nil {
+		t.Errorf("Returned envelope where it should be nil")
+	}
+
+	if err == nil {
+		t.Errorf("Should have returned an error message")
+	}
+
+	if !strings.Contains(err.Error(), errorFailedToCreateResponse) {
+		t.Errorf("Returned wrong error message")
+	}
+}
 
 func TestAuthenticationErrorResponseFromXML(t *testing.T) {
 	inputFile := "./fixtures/error_response_authentication.xml"

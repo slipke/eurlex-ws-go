@@ -2,8 +2,24 @@ package eurlex
 
 import (
 	"io/ioutil"
+	"strings"
 	"testing"
 )
+
+func TestInvalidSearchResult(t *testing.T) {
+	er, err := NewSearchResultFromXML("")
+	if er != nil {
+		t.Errorf("Returned envelope where it should be nil")
+	}
+
+	if err == nil {
+		t.Errorf("Should have returned an error message")
+	}
+
+	if !strings.Contains(err.Error(), errorFailedToCreateResult) {
+		t.Errorf("Returned wrong error message")
+	}
+}
 
 func TestCreateSearchResult(t *testing.T) {
 	inputFile := "./fixtures/result.xml"

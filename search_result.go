@@ -6,6 +6,10 @@ import (
 	"github.com/slipke/eurlex-ws-go/internal/response"
 )
 
+const (
+	errorFailedToCreateResult = "failed to create envelope from XML"
+)
+
 type SearchResult struct {
 	NumHits   int64
 	TotalHits int64
@@ -22,7 +26,7 @@ func NewSearchResultFromXML(xml string) (*SearchResult, error) {
 	sr := NewSearchResult()
 	e, err := response.NewEnvelopeFromXML(xml)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create envelope from XML: %s", err)
+		return nil, fmt.Errorf("%s: %s", errorFailedToCreateResult, err)
 	}
 
 	sr.NumHits = e.Body.SearchResults.NumHits
