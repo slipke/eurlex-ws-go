@@ -27,7 +27,7 @@ func (ws *Webservice) Search(sr *SearchRequest) (*SearchResult, error) {
 		return nil, fmt.Errorf("failed to marshal SearchRequest: %s", err)
 	}
 
-	// log.Debugf("Calling %s %s with body %s", http.MethodPost, wsURL, xml)
+	ws.cfg.Logger.Printf("Calling %s %s with body %s", http.MethodPost, wsURL, xml)
 
 	body := bytes.NewReader(xml)
 	r, err := http.NewRequest(http.MethodPost, wsURL, body)
@@ -49,11 +49,11 @@ func (ws *Webservice) Search(sr *SearchRequest) (*SearchResult, error) {
 		return nil, fmt.Errorf("failed to unmarshal response body, empty response")
 	}
 
-	// log.Debugf(
-	// 	"ResponseCode: %d, ResponseBody: %s",
-	// 	res.StatusCode,
-	// 	string(resBody),
-	// )
+	ws.cfg.Logger.Printf(
+		"ResponseCode: %d, ResponseBody: %s",
+		res.StatusCode,
+		string(resBody),
+	)
 
 	// err = ioutil.WriteFile("/tmp/eurlex.out", resBody, 0644)
 	// if err != nil {
