@@ -1,4 +1,4 @@
-package webservice
+package eurlex
 
 import (
 	"io/ioutil"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestAuthenticationErrorResponseFromXML(t *testing.T) {
-	inputFile := "../../fixtures/error_response_authentication.xml"
+	inputFile := "./fixtures/error_response_authentication.xml"
 	xmlBytes, err := ioutil.ReadFile(inputFile)
 	if err != nil {
 		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)

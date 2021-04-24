@@ -1,4 +1,4 @@
-package webservice
+package eurlex
 
 import (
 	"strings"
@@ -8,42 +8,28 @@ import (
 func TestCreateSearchRequest(t *testing.T) {
 	search := "testsearch"
 
-	sr := NewSearchRequest(search)
+	sr := NewSearchRequestFromString(search)
 
 	if sr.Query.String() != search {
 		t.Errorf("Query was not set properly, got: %s, want: %s", sr.Query.String(), search)
 	}
 
-	username := "testuser"
-	password := "testpass"
-
-	cfg := NewConfig(username, password)
-	sr = NewSearchRequestWithConfig(cfg, search)
-
-	if sr.Username != username {
-		t.Errorf("Username was not set properly, got: %s, want: %s", sr.Username, username)
-	}
-
-	if sr.Password != password {
-		t.Errorf("Password was not set properly, got: %s, want: %s", sr.Password, password)
-	}
+	sr = NewSearchRequestFromString(search)
 
 	if sr.Query.String() != search {
 		t.Errorf("Query was not set properly, got: %s, want: %s", sr.Query.String(), search)
 	}
-
-	// @TODO Add more fields when decided
 }
 
 func TestToXML(t *testing.T) {
 	search := "testsearch"
-	u := "testuser"
-	p := "testpass"
 
-	sr := NewSearchRequestWithConfig(NewConfig(u, p), search)
+	sr := NewSearchRequestFromString(search)
 	sr.Page = 1
 	sr.PageSize = 20
 	sr.SearchLanguage = "de"
+	sr.username = "testuser"
+	sr.password = "testpass"
 
 	requiredElements := []string{
 		// Header

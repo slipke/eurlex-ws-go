@@ -1,4 +1,4 @@
-package webservice
+package eurlex
 
 import "testing"
 

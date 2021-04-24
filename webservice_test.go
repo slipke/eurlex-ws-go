@@ -1,4 +1,4 @@
-package webservice
+package eurlex
 
 import (
 	"io/ioutil"
@@ -35,7 +35,7 @@ func NewMockClient(fn RoundTripFunc) *http.Client {
 }
 
 func TestSearch(t *testing.T) {
-	inputFile := "../../fixtures/result.xml"
+	inputFile := "./fixtures/result.xml"
 	xmlBytes, err := ioutil.ReadFile(inputFile)
 	if err != nil {
 		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)
@@ -57,7 +57,7 @@ func TestSearch(t *testing.T) {
 
 	ws := NewWebservice(cfg)
 
-	sr, err := ws.Search(NewSearchRequestWithConfig(cfg, "testsearch"))
+	sr, err := ws.Search(NewSearchRequestFromString("testsearch"))
 	if err != nil {
 		t.Errorf("Failed to search: %s", err)
 		t.FailNow()

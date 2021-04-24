@@ -1,4 +1,4 @@
-package webservice
+package eurlex
 
 import (
 	"io/ioutil"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestCreateSearchResult(t *testing.T) {
-	inputFile := "../../fixtures/result.xml"
+	inputFile := "./fixtures/result.xml"
 	xmlBytes, err := ioutil.ReadFile(inputFile)
 	if err != nil {
 		t.Errorf("Failed to load fixtures %s: %s", inputFile, err)

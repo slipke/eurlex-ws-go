@@ -1,9 +1,9 @@
-package webservice
+package eurlex
 
 import (
 	"fmt"
 
-	"github.com/slipke/eurlex-ws-go/pkg/response"
+	"github.com/slipke/eurlex-ws-go/internal/response"
 )
 
 type ErrorResponse struct {

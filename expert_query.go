@@ -1,4 +1,4 @@
-package webservice
+package eurlex
 
 type ExpertQuery struct {
 	// @TODO Currently, only s
@@ -6,7 +6,7 @@ type ExpertQuery struct {
 	s string
 }
 
-func NewExpertQuery(query string) *ExpertQuery {
+func NewExpertQueryFromString(query string) *ExpertQuery {
 	return &ExpertQuery{
 		s: query,
 	}
