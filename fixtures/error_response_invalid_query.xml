@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope">
+    <S:Body>
+        <ns1:Fault xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:ns1="http://www.w3.org/2003/05/soap-envelope">
+            <ns1:Code>
+                <ns1:Value>ns1:Sender</ns1:Value>
+                <ns1:Subcode>
+                    <ns1:Value xmlns:ns2="http://eur-lex.europa.eu/search">ns2:WS_QUERY_SYNTAX_ERROR</ns1:Value>
+                </ns1:Subcode>
+            </ns1:Code>
+            <ns1:Reason>
+                <ns1:Text xml:lang="en">Error at line 1 character 8.</ns1:Text>
+            </ns1:Reason>
+        </ns1:Fault>
+    </S:Body>
+</S:Envelope>
