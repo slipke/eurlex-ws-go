@@ -2,7 +2,7 @@
 
 # Overview
 
-eurlex-ws-go provides an implementation of the EUR-Lex Webservice (Search) in Go. The API is described [here](https://eur-lex.europa.eu/content/help/webservice.html) and [here](https://eur-lex.europa.eu/content/tools/webservices/SearchWebServiceUserManual_v2.00.pdf).
+[eurlex-ws-go](https://github.com/slipke/eurlex-ws-go) provides an implementation of the [EUR-Lex](https://eur-lex.europa.eu/homepage.html) Webservice (Search) in Go. The API is described [here](https://eur-lex.europa.eu/content/help/webservice.html) and [here](https://eur-lex.europa.eu/content/tools/webservices/SearchWebServiceUserManual_v2.00.pdf).
 
 ## Install
 
@@ -17,7 +17,6 @@ Create a simple query and call the API (replace `<username>` and `<password>` wi
 ```go
 import (
     log "github.com/sirupsen/logrus"
-
 	"github.com/slipke/eurlex-ws-go"
 )
 
