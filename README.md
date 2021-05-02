@@ -79,12 +79,6 @@ SearchRequest{
 
 The structure of the returned `SearchResult` is derived from the returning XML. An example can be found in `fixtures/result.xml`. More information can be found under [Resources](#Resources).
 
-## Todos
-
-- Write test to verfiy XSD (see XSD 3)
-- Improve code coverage
-
-
 ## Resources
 
 - [EUR-Lex Help](https://eur-lex.europa.eu/content/help/webservice.html)
@@ -95,3 +89,4 @@ The structure of the returned `SearchResult` is derived from the returning XML. 
 - [XSD 1](https://eur-lex.europa.eu/eurlex-ws?xsd=1)
 - [XSD 2](https://eur-lex.europa.eu/eurlex-ws?xsd=2)
 - [XSD 3](https://eur-lex.europa.eu/eurlex-ws?xsd=3)
+- [eurlex-model-go](https://github.com/slipke/eurlex-model-go)
